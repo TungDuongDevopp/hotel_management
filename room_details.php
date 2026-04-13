@@ -6,6 +6,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <?php require('inc/links.php'); ?>
   <title><?php echo $settings_r['site_title'] ?> - Chi tiết phòng</title>
+  <style>
+    .breadcrumb-nav {
+      font-size: 14px;
+    }
+    .breadcrumb-nav a {
+      color: var(--gray-500);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    .breadcrumb-nav a:hover {
+      color: var(--primary);
+    }
+    .detail-card {
+      border: none !important;
+      border-radius: var(--radius) !important;
+      overflow: hidden;
+      border-left: 4px solid var(--primary) !important;
+    }
+    .detail-card h4 {
+      color: var(--primary);
+      font-weight: 800;
+    }
+    .carousel-inner img {
+      border-radius: var(--radius-sm);
+    }
+    .review-item {
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      background: var(--white);
+      border-left: 3px solid var(--gold);
+      margin-bottom: 16px;
+      transition: var(--transition);
+    }
+    .review-item:hover {
+      box-shadow: var(--shadow-sm);
+    }
+  </style>
 </head>
 <body class="bg-light">
 
@@ -31,16 +68,16 @@
     <div class="row">
 
       <div class="col-12 my-5 mb-4 px-4">
-        <h2 class="fw-bold"><?php echo $room_data['name'] ?></h2>
-        <div style="font-size: 14px;">
-          <a href="index.php" class="text-secondary text-decoration-none">Trang chủ</a>
-          <span class="text-secondary"> > </span>
-          <a href="rooms.php" class="text-secondary text-decoration-none">Danh sách phòng</a>
+        <h2 class="fw-bold h-font" style="color:var(--primary-dark);"><?php echo $room_data['name'] ?></h2>
+        <div class="breadcrumb-nav">
+          <a href="index.php">Trang chủ</a>
+          <span class="text-secondary mx-1"><i class="bi bi-chevron-right" style="font-size:.7rem;"></i></span>
+          <a href="rooms.php">Danh sách phòng</a>
         </div>
       </div>
 
       <div class="col-lg-7 col-md-12 px-4">
-        <div id="roomCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div id="roomCarousel" class="carousel slide" data-bs-ride="carousel" style="border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-md);">
           <div class="carousel-inner">
             <?php 
 
@@ -84,8 +121,8 @@
       </div>
 
       <div class="col-lg-5 col-md-12 px-4">
-        <div class="card mb-4 border-0 shadow-sm rounded-3">
-          <div class="card-body">
+        <div class="card mb-4 shadow-sm detail-card">
+          <div class="card-body p-4">
             <?php 
 
               echo<<<price
@@ -126,7 +163,7 @@
 
               echo<<<features
                 <div class="mb-3">
-                  <h6 class="mb-1">Không gian</h6>
+                  <h6 class="mb-2 fw-bold" style="font-size:.85rem;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px;">Không gian</h6>
                   $features_data
                 </div>
               features;
@@ -144,28 +181,28 @@
               
               echo<<<facilities
                 <div class="mb-3">
-                  <h6 class="mb-1">Facilities</h6>
+                  <h6 class="mb-2 fw-bold" style="font-size:.85rem;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px;">Tiện ích</h6>
                   $facilities_data
                 </div>
               facilities;
 
               echo<<<guests
                 <div class="mb-3">
-                  <h6 class="mb-1">Guests</h6>
+                  <h6 class="mb-2 fw-bold" style="font-size:.85rem;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px;">Sức chứa</h6>
                   <span class="badge rounded-pill bg-light text-dark text-wrap">
-                    $room_data[adult] Người lớn
+                    <i class="bi bi-people me-1"></i> $room_data[adult] Người lớn
                   </span>
                   <span class="badge rounded-pill bg-light text-dark text-wrap">
-                    $room_data[children] Trẻ em
+                    <i class="bi bi-person me-1"></i> $room_data[children] Trẻ em
                   </span>
                 </div>
               guests;
 
               echo<<<area
                 <div class="mb-3">
-                  <h6 class="mb-1">Area</h6>
+                  <h6 class="mb-2 fw-bold" style="font-size:.85rem;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px;">Diện tích</h6>
                   <span class='badge rounded-pill bg-light text-dark text-wrap me-1 mb-1'>
-                    $room_data[area] m2
+                    <i class="bi bi-aspect-ratio me-1"></i> $room_data[area] m²
                   </span>
                 </div>
               area;
@@ -176,7 +213,9 @@
                   $login=1;
                 }
                 echo<<<book
-                  <button onclick='checkLoginToBook($login,$room_data[id])' class="btn w-100 text-white custom-bg shadow-none mb-1">Đặt ngay</button>
+                  <button onclick='checkLoginToBook($login,$room_data[id])' class="btn w-100 text-white custom-bg shadow-none mb-1 mt-2" style="padding:12px;">
+                    <i class="bi bi-lightning-charge me-1"></i> Đặt ngay
+                  </button>
                 book;
               }
 
@@ -187,14 +226,24 @@
 
       <div class="col-12 mt-4 px-4">
         <div class="mb-5">
-          <h5 class="fw-bold h-font">Mô tả</h5>
-          <p>
+          <h5 class="fw-bold h-font d-flex align-items-center">
+            <span class="d-inline-flex align-items-center justify-content-center me-2" style="width:32px;height:32px;border-radius:50%;background:var(--moss-light);">
+              <i class="bi bi-file-text" style="color:var(--primary);font-size:.85rem;"></i>
+            </span>
+            Mô tả
+          </h5>
+          <p style="line-height:1.8;color:var(--gray-700);">
             <?php echo $room_data['description'] ?>
           </p>
         </div>
 
         <div>
-          <h5 class="fw-bold h-font mb-3">Trải nghiệm khách hàng</h5>
+          <h5 class="fw-bold h-font mb-3 d-flex align-items-center">
+            <span class="d-inline-flex align-items-center justify-content-center me-2" style="width:32px;height:32px;border-radius:50%;background:var(--moss-light);">
+              <i class="bi bi-chat-quote" style="color:var(--primary);font-size:.85rem;"></i>
+            </span>
+            Trải nghiệm khách hàng
+          </h5>
 
           <?php
             $review_q = "SELECT rr.*,uc.name AS uname, uc.profile, r.name AS rname FROM `rating_review` rr
@@ -207,7 +256,7 @@
             $img_path = USERS_IMG_PATH;
 
             if(mysqli_num_rows($review_res)==0){
-              echo 'No reviews yet!';
+              echo '<div class="text-center text-muted py-4"><i class="bi bi-chat-square-text fs-1 d-block mb-2"></i>Chưa có đánh giá nào!</div>';
             }
             else
             {
@@ -219,12 +268,12 @@
                 }
 
                 echo<<<reviews
-                  <div class="mb-4">
+                  <div class="review-item">
                     <div class="d-flex align-items-center mb-2">
-                      <img src="$img_path$row[profile]" class="rounded-circle" loading="lazy" width="30px">
-                      <h6 class="m-0 ms-2">$row[uname]</h6>
+                      <img src="$img_path$row[profile]" class="rounded-circle" loading="lazy" width="36px" height="36px" style="object-fit:cover;border:2px solid var(--moss);">
+                      <h6 class="m-0 ms-2 fw-bold" style="font-size:.9rem;">$row[uname]</h6>
                     </div>
-                    <p class="mb-1">
+                    <p class="mb-1" style="color:var(--gray-700);font-size:.9rem;">
                       $row[review]
                     </p>
                     <div>

@@ -6,6 +6,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <?php require('inc/links.php'); ?>
   <title><?php echo $settings_r['site_title'] ?> - Xác nhận đặt phòng</title>
+  <style>
+    .booking-room-card {
+      border-radius: var(--radius) !important;
+      overflow: hidden;
+      border: none;
+      transition: var(--transition);
+    }
+    .booking-room-card img {
+      border-radius: var(--radius-sm);
+      transition: transform .5s ease;
+    }
+    .booking-room-card:hover img {
+      transform: scale(1.03);
+    }
+    .booking-form-card {
+      border: none !important;
+      border-left: 4px solid var(--primary) !important;
+      border-radius: var(--radius) !important;
+    }
+    .pay-info-box {
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      background: var(--cream);
+      border-left: 3px solid var(--gold);
+    }
+  </style>
 </head>
 <body class="bg-light">
 
@@ -56,13 +82,16 @@
     <div class="row">
 
       <div class="col-12 my-5 mb-4 px-4">
-        <h4 class="mt-4 fw-bold h-font">XÁC NHẬN ĐẶT PHÒNG</h4>
+        <h4 class="mt-4 fw-bold h-font" style="color:var(--primary-dark);">
+          <i class="bi bi-calendar2-check me-2" style="color:var(--gold);"></i>
+          XÁC NHẬN ĐẶT PHÒNG
+        </h4>
         <div style="font-size: 14px;">
           <a href="index.php" class="text-secondary text-decoration-none">Trang chủ</a>
-          <span class="text-secondary"> > </span>
+          <span class="text-secondary mx-1"><i class="bi bi-chevron-right" style="font-size:.7rem;"></i></span>
           <a href="rooms.php" class="text-secondary text-decoration-none">Danh sách phòng</a>
-          <span class="text-secondary"> > </span>
-          <a href="#" class="text-secondary text-decoration-none">Xác nhận đặt phòng</a>
+          <span class="text-secondary mx-1"><i class="bi bi-chevron-right" style="font-size:.7rem;"></i></span>
+          <span class="text-muted">Xác nhận đặt phòng</span>
         </div>
       </div>
 
@@ -80,10 +109,10 @@
           }
 
           echo<<<data
-            <div class="card p-3 shadow-sm rounded">
+            <div class="card p-3 shadow-sm booking-room-card">
               <img src="$room_thumb" class="img-fluid rounded mb-3">
-              <h5>$room_data[name]</h5>
-              <h6>$room_data[price] VND / đêm</h6>
+              <h5 class="fw-bold" style="color:var(--primary-dark);">$room_data[name]</h5>
+              <h6 style="color:var(--primary);font-weight:700;">$room_data[price] VND / đêm</h6>
             </div>
           data;
 
@@ -91,10 +120,12 @@
       </div>
 
       <div class="col-lg-5 col-md-12 px-4">
-        <div class="card mb-4 border-0 shadow-sm rounded-3">
-          <div class="card-body">
+        <div class="card mb-4 shadow-sm booking-form-card">
+          <div class="card-body p-4">
             <form action="pay_now.php" method="POST" id="booking_form">
-              <h6 class="mb-3">Thông tin chi tiết</h6>
+              <h6 class="mb-3 fw-bold" style="color:var(--primary-dark);">
+                <i class="bi bi-person-lines-fill me-1"></i> Thông tin chi tiết
+              </h6>
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Tên</label>
@@ -122,9 +153,15 @@
                     <span class="visually-hidden">Xin vui lòng chờ...</span>
                   </div>
 
-                  <h6 class="mb-3 text-danger" id="pay_info">Chọn ngày nhận phòng và trả phòng!</h6>
+                  <div class="pay-info-box mb-3">
+                    <h6 class="mb-0 text-danger" id="pay_info" style="font-size:.9rem;">
+                      <i class="bi bi-info-circle me-1"></i> Chọn ngày nhận phòng và trả phòng!
+                    </h6>
+                  </div>
 
-                  <button name="pay_now" class="btn w-100 text-white custom-bg shadow-none mb-1" disabled>Thanh toán</button>
+                  <button name="pay_now" class="btn w-100 text-white custom-bg shadow-none mb-1" disabled style="padding:12px;">
+                    <i class="bi bi-credit-card me-1"></i> Thanh toán
+                  </button>
                 </div>
               </div>
             </form>
