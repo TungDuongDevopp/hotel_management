@@ -20,6 +20,84 @@
         padding: 0 35px;
       } 
     }
+
+    .swiper-container .swiper-slide img {
+      border-radius: var(--radius);
+      max-height: 520px;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    .room-card-img-wrap {
+      overflow: hidden;
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+    .room-card-img-wrap img {
+      transition: transform .6s cubic-bezier(.4,0,.2,1);
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+    .card:hover .room-card-img-wrap img {
+      transform: scale(1.08);
+    }
+    .price-tag {
+      position: absolute;
+      top: 14px; right: 14px;
+      background: var(--primary-gradient);
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 99px;
+      font-size: .82rem;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(27,107,58,.3);
+    }
+    .facility-icon-box {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: var(--moss-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      transition: var(--transition);
+    }
+    .facility-icon-box:hover {
+      background: var(--primary-gradient);
+      transform: scale(1.08);
+    }
+    .facility-icon-box:hover img {
+      filter: brightness(0) invert(1);
+    }
+    .testimonial-quote {
+      position: relative;
+      padding-left: 20px;
+    }
+    .testimonial-quote::before {
+      content: '\201C';
+      position: absolute;
+      left: -5px; top: -15px;
+      font-size: 4rem;
+      color: var(--gold);
+      opacity: .3;
+      font-family: serif;
+      line-height: 1;
+    }
+    .section-title {
+      position: relative;
+      display: inline-block;
+    }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: var(--gold-gradient);
+      border-radius: 99px;
+    }
   </style>
 </head>
 <body class="bg-light">
@@ -29,7 +107,7 @@
   <!-- Carousel -->
 
   <div class="container-fluid px-lg-4 mt-4">
-    <div class="swiper swiper-container">
+    <div class="swiper swiper-container" style="border-radius: var(--radius);">
       <div class="swiper-wrapper">
         <?php 
           $res = selectAll('carousel');
@@ -49,22 +127,33 @@
 
   <!-- check availability form -->
 
-  <div class="container availability-form">
+  <div class="container availability-form animate-fade-in">
     <div class="row">
-      <div class="col-lg-12 bg-white shadow p-4 rounded">
-        <h5 class="mb-4 fw-bold h-font">Tiến hành đặt phòng</h5>
+      <div class="col-lg-12 bg-white shadow-lg p-4 rounded" style="border-radius: var(--radius-lg) !important;">
+        <h5 class="mb-4 fw-bold h-font d-flex align-items-center">
+          <span class="d-inline-flex align-items-center justify-content-center me-2" style="width:36px;height:36px;border-radius:50%;background:var(--moss-light);">
+            <i class="bi bi-calendar-check" style="color:var(--primary);"></i>
+          </span>
+          Tiến hành đặt phòng
+        </h5>
         <form action="rooms.php">
           <div class="row align-items-end">
             <div class="col-lg-3 mb-3">
-              <label class="form-label" style="font-weight: 500;">Nhận phòng</label>
+              <label class="form-label" style="font-weight: 600;">
+                <i class="bi bi-box-arrow-in-right me-1 text-muted"></i> Nhận phòng
+              </label>
               <input type="date" class="form-control shadow-none" name="checkin" required>
             </div>
             <div class="col-lg-3 mb-3">
-              <label class="form-label" style="font-weight: 500;">Trả phòng</label>
+              <label class="form-label" style="font-weight: 600;">
+                <i class="bi bi-box-arrow-right me-1 text-muted"></i> Trả phòng
+              </label>
               <input type="date" class="form-control shadow-none" name="checkout" required>
             </div>
             <div class="col-lg-2 mb-3">
-              <label class="form-label" style="font-weight: 500;">Người lớn</label>
+              <label class="form-label" style="font-weight: 600;">
+                <i class="bi bi-people me-1 text-muted"></i> Người lớn
+              </label>
               <select class="form-select shadow-none" name="adult">
                 <?php 
                   $guests_q = mysqli_query($con,"SELECT MAX(adult) AS `max_adult`, MAX(children) AS `max_children` 
@@ -78,7 +167,9 @@
               </select>
             </div>
             <div class="col-lg-2 mb-3">
-              <label class="form-label" style="font-weight: 500;">Trẻ em</label>
+              <label class="form-label" style="font-weight: 600;">
+                <i class="bi bi-person me-1 text-muted"></i> Trẻ em
+              </label>
               <select class="form-select shadow-none" name="children">
                 <?php 
                   for($i=1; $i<=$guests_res['max_children']; $i++){
@@ -89,7 +180,9 @@
             </div>
             <input type="hidden" name="check_availability">
             <div class="col-lg-2 mb-lg-3 mt-2">
-              <button type="submit" class="btn text-white shadow-none custom-bg">Tìm kiếm</button>
+              <button type="submit" class="btn text-white shadow-none custom-bg w-100">
+                <i class="bi bi-search me-1"></i> Tìm kiếm
+              </button>
             </div>
           </div>
         </form>
@@ -99,7 +192,10 @@
 
   <!-- Our Rooms -->
 
-  <h2 class="mt-5 pt-4 mb-4 text-center fw-bold h-font">Danh sách phòng</h2>
+  <div class="text-center mt-5 pt-4 mb-4">
+    <h2 class="fw-bold h-font section-title">Danh sách phòng</h2>
+    <div class="gold-divider mt-3"></div>
+  </div>
 
   <div class="container">
     <div class="row">
@@ -156,7 +252,7 @@
               $login=1;
             }
 
-            $book_btn = "<button onclick='checkLoginToBook($login,$room_data[id])' class='btn btn-sm text-white custom-bg shadow-none'>Đặt ngay</button>";
+            $book_btn = "<button onclick='checkLoginToBook($login,$room_data[id])' class='btn btn-sm text-white custom-bg shadow-none'><i class='bi bi-lightning-charge me-1'></i>Đặt ngay</button>";
           }
 
           $rating_q = "SELECT AVG(rating) AS `avg_rating` FROM `rating_review`
@@ -169,8 +265,8 @@
 
           if($rating_fetch['avg_rating']!=NULL)
           {
-            $rating_data = "<div class='rating mb-4'>
-              <h6 class='mb-1'>Rating</h6>
+            $rating_data = "<div class='rating mb-3'>
+              <h6 class='mb-1' style='font-size:.85rem;color:var(--gray-500);'>Đánh giá</h6>
               <span class='badge rounded-pill bg-light'>
             ";
 
@@ -187,32 +283,34 @@
 
           echo <<<data
             <div class="col-lg-4 col-md-6 my-3">
-              <div class="card border-0 shadow" style="max-width: 350px; margin: auto;">
-                <img src="$room_thumb" class="card-img-top">
+              <div class="card border-0 shadow" style="max-width: 370px; margin: auto;">
+                <div class="room-card-img-wrap position-relative">
+                  <img src="$room_thumb" class="card-img-top">
+                  <span class="price-tag">$room_data[price] VND / đêm</span>
+                </div>
                 <div class="card-body">
-                  <h5>$room_data[name]</h5>
-                  <h6 class="mb-4">$room_data[price] VND / đêm</h6>
-                  <div class="features mb-4">
-                    <h6 class="mb-1">Không gian</h6>
+                  <h5 class="fw-bold mb-2">$room_data[name]</h5>
+                  <div class="features mb-3">
+                    <h6 class="mb-1" style="font-size:.85rem;color:var(--gray-500);">Không gian</h6>
                     $features_data
                   </div>
-                  <div class="facilities mb-4">
-                    <h6 class="mb-1">Facilities</h6>
+                  <div class="facilities mb-3">
+                    <h6 class="mb-1" style="font-size:.85rem;color:var(--gray-500);">Tiện ích</h6>
                     $facilities_data
                   </div>
-                  <div class="guests mb-4">
-                    <h6 class="mb-1">Guests</h6>
+                  <div class="guests mb-3">
+                    <h6 class="mb-1" style="font-size:.85rem;color:var(--gray-500);">Sức chứa</h6>
                     <span class="badge rounded-pill bg-light text-dark text-wrap">
-                      $room_data[adult] Người lớn
+                      <i class="bi bi-people me-1"></i> $room_data[adult] Người lớn
                     </span>
                     <span class="badge rounded-pill bg-light text-dark text-wrap">
-                      $room_data[children] Trẻ em
+                      <i class="bi bi-person me-1"></i> $room_data[children] Trẻ em
                     </span>
                   </div>
                   $rating_data
-                  <div class="d-flex justify-content-evenly mb-2">
+                  <div class="d-flex justify-content-evenly mb-2 pt-2" style="border-top:1px solid var(--gray-100);">
                     $book_btn
-                    <a href="room_details.php?id=$room_data[id]" class="btn btn-sm btn-outline-dark shadow-none">Chi tiết</a>
+                    <a href="room_details.php?id=$room_data[id]" class="btn btn-sm btn-outline-dark shadow-none"><i class="bi bi-eye me-1"></i>Chi tiết</a>
                   </div>
                 </div>
               </div>
@@ -224,14 +322,19 @@
       ?>
 
       <div class="col-lg-12 text-center mt-5">
-        <a href="rooms.php" class="btn btn-sm btn-outline-dark rounded-0 fw-bold shadow-none">Tìm hiểu thêm >>></a>
+        <a href="rooms.php" class="btn btn-outline-dark fw-bold shadow-none px-4 py-2" style="border-radius:var(--radius-sm);">
+          Xem tất cả phòng <i class="bi bi-arrow-right ms-1"></i>
+        </a>
       </div>
     </div>
   </div>
 
   <!-- Our Facilities -->
 
-  <h2 class="mt-5 pt-4 mb-4 text-center fw-bold h-font">Các tiện tích</h2>
+  <div class="text-center mt-5 pt-4 mb-4">
+    <h2 class="fw-bold h-font section-title">Các tiện ích</h2>
+    <div class="gold-divider mt-3"></div>
+  </div>
 
   <div class="container">
     <div class="row justify-content-evenly px-lg-0 px-md-0 px-5">
@@ -241,23 +344,30 @@
 
         while($row = mysqli_fetch_assoc($res)){
           echo<<<data
-            <div class="col-lg-2 col-md-2 text-center bg-white rounded shadow py-4 my-3">
-              <img src="$path$row[icon]" width="60px">
-              <h5 class="mt-3">$row[name]</h5>
+            <div class="col-lg-2 col-md-2 text-center bg-white rounded shadow py-4 my-3 hover-lift" style="border-radius:var(--radius) !important;">
+              <div class="facility-icon-box">
+                <img src="$path$row[icon]" width="36px">
+              </div>
+              <h6 class="mt-2 fw-bold">$row[name]</h6>
             </div>
           data;
         }
       ?>
 
       <div class="col-lg-12 text-center mt-5">
-        <a href="facilities.php" class="btn btn-sm btn-outline-dark rounded-0 fw-bold shadow-none">Tìm hiểu thêm >>></a>
+        <a href="facilities.php" class="btn btn-outline-dark fw-bold shadow-none px-4 py-2" style="border-radius:var(--radius-sm);">
+          Xem tất cả tiện ích <i class="bi bi-arrow-right ms-1"></i>
+        </a>
       </div>
     </div>
   </div>
 
   <!-- Testimonials -->
 
-  <h2 class="mt-5 pt-4 mb-4 text-center fw-bold h-font">Đánh giá dịch vụ</h2>
+  <div class="text-center mt-5 pt-4 mb-4">
+    <h2 class="fw-bold h-font section-title">Đánh giá dịch vụ</h2>
+    <div class="gold-divider mt-3"></div>
+  </div>
 
   <div class="container mt-5">
     <div class="swiper swiper-testimonials">
@@ -273,7 +383,7 @@
           $img_path = USERS_IMG_PATH;
 
           if(mysqli_num_rows($review_res)==0){
-            echo 'No reviews yet!';
+            echo '<div class="text-center text-muted py-4"><i class="bi bi-chat-square-text fs-1 d-block mb-2"></i>Chưa có đánh giá nào!</div>';
           }
           else
           {
@@ -285,15 +395,20 @@
               }
 
               echo<<<slides
-                <div class="swiper-slide bg-white p-4">
+                <div class="swiper-slide bg-white p-4" style="border-radius:var(--radius);">
                   <div class="profile d-flex align-items-center mb-3">
-                    <img src="$img_path$row[profile]" class="rounded-circle" loading="lazy" width="30px">
-                    <h6 class="m-0 ms-2">$row[uname]</h6>
+                    <img src="$img_path$row[profile]" class="rounded-circle" loading="lazy" width="40px" height="40px" style="object-fit:cover;border:2px solid var(--moss);">
+                    <div class="ms-2">
+                      <h6 class="m-0 fw-bold" style="font-size:.9rem;">$row[uname]</h6>
+                      <small class="text-muted">$row[rname]</small>
+                    </div>
                   </div>
-                  <p>
-                    $row[review]
-                  </p>
-                  <div class="rating">
+                  <div class="testimonial-quote">
+                    <p style="font-size:.9rem;color:var(--gray-700);line-height:1.6;">
+                      $row[review]
+                    </p>
+                  </div>
+                  <div class="rating mt-2">
                     $stars
                   </div>
                 </div>
@@ -309,49 +424,66 @@
 
   <!-- Reach us -->
 
-  <h2 class="mt-5 pt-4 mb-4 text-center fw-bold h-font">Liên hệ</h2>
+  <div class="text-center mt-5 pt-4 mb-4">
+    <h2 class="fw-bold h-font section-title">Liên hệ</h2>
+    <div class="gold-divider mt-3"></div>
+  </div>
 
   <div class="container">
     <div class="row">
-      <div class="col-lg-8 col-md-8 p-4 mb-lg-0 mb-3 bg-white rounded">
-        <iframe class="w-100 rounded" height="320px" src="<?php echo $contact_r['iframe'] ?>" loading="lazy"></iframe>
+      <div class="col-lg-8 col-md-8 p-4 mb-lg-0 mb-3 bg-white rounded" style="border-radius:var(--radius) !important;">
+        <iframe class="w-100 rounded" height="320px" src="<?php echo $contact_r['iframe'] ?>" loading="lazy" style="border-radius:var(--radius-sm) !important;"></iframe>
       </div>
       <div class="col-lg-4 col-md-4">
-        <div class="bg-white p-4 rounded mb-4">
-          <h5>Tổng đài viên</h5>
-          <a href="tel: +<?php echo $contact_r['pn1'] ?>" class="d-inline-block mb-2 text-decoration-none text-dark">
-            <i class="bi bi-telephone-fill"></i> +<?php echo $contact_r['pn1'] ?>
+        <div class="bg-white p-4 rounded mb-4 hover-lift" style="border-radius:var(--radius) !important;">
+          <h5 class="d-flex align-items-center fw-bold">
+            <span class="d-inline-flex align-items-center justify-content-center me-2" style="width:32px;height:32px;border-radius:50%;background:var(--moss-light);">
+              <i class="bi bi-telephone-fill" style="color:var(--primary);font-size:.85rem;"></i>
+            </span>
+            Tổng đài viên
+          </h5>
+          <a href="tel: +<?php echo $contact_r['pn1'] ?>" class="d-inline-block mb-2 text-decoration-none text-dark ms-4" style="font-weight:500;">
+            +<?php echo $contact_r['pn1'] ?>
           </a>
         </div>
-        <div class="bg-white p-4 rounded mb-2">
-          <h5>Theo dõi chúng tôi</h5>
-          <?php 
-            if($contact_r['tw']!=''){
-              echo<<<data
-                <a href="$contact_r[tw]" class="d-inline-block mb-3">
-                  <span class="badge bg-light text-dark fs-6 p-2"> 
-                  <i class="bi bi-twitter me-1"></i> Twitter
-                  </span>
-                </a>
-                <br>
-              data;
-            }
-          ?>
+        <div class="bg-white p-4 rounded mb-3 hover-lift" style="border-radius:var(--radius) !important;">
+          <h5 class="d-flex align-items-center fw-bold">
+            <span class="d-inline-flex align-items-center justify-content-center me-2" style="width:32px;height:32px;border-radius:50%;background:var(--moss-light);">
+              <i class="bi bi-share-fill" style="color:var(--primary);font-size:.85rem;"></i>
+            </span>
+            Theo dõi chúng tôi
+          </h5>
+          <div class="ms-4 mt-2">
+            <?php 
+              if($contact_r['tw']!=''){
+                echo<<<data
+                  <a href="$contact_r[tw]" class="d-inline-block mb-2">
+                    <span class="badge bg-light text-dark fs-6 p-2" style="border-radius:var(--radius-sm);"> 
+                    <i class="bi bi-twitter me-1" style="color:#1DA1F2;"></i> Twitter
+                    </span>
+                  </a>
+                  <br>
+                data;
+              }
+            ?>
 
-          <a href="<?php echo $contact_r['fb'] ?>" class="d-inline-block mb-3">
-            <span class="badge bg-light text-dark fs-6 p-2"> 
-            <i class="bi bi-facebook me-1"></i> Facebook
-            </span>
-          </a>
-          <br>
-          <a href="<?php echo $contact_r['insta'] ?>" class="d-inline-block">
-            <span class="badge bg-light text-dark fs-6 p-2"> 
-            <i class="bi bi-instagram me-1"></i> Instagram
-            </span>
-          </a>
+            <a href="<?php echo $contact_r['fb'] ?>" class="d-inline-block mb-2">
+              <span class="badge bg-light text-dark fs-6 p-2" style="border-radius:var(--radius-sm);"> 
+              <i class="bi bi-facebook me-1" style="color:#1877F2;"></i> Facebook
+              </span>
+            </a>
+            <br>
+            <a href="<?php echo $contact_r['insta'] ?>" class="d-inline-block">
+              <span class="badge bg-light text-dark fs-6 p-2" style="border-radius:var(--radius-sm);"> 
+              <i class="bi bi-instagram me-1" style="color:#E4405F;"></i> Instagram
+              </span>
+            </a>
+          </div>
         </div>
-        <div class="p-4 rounded">
-          <a href="about.php" class="btn btn-sm btn-outline-dark rounded-0 fw-bold shadow-none">Tìm hiểu thêm >>></a>
+        <div class="p-3">
+          <a href="about.php" class="btn btn-outline-dark fw-bold shadow-none w-100" style="border-radius:var(--radius-sm);">
+            Tìm hiểu thêm <i class="bi bi-arrow-right ms-1"></i>
+          </a>
         </div>
       </div>
     </div>
@@ -360,7 +492,7 @@
   <!-- Password reset modal and code -->
 
   <div class="modal fade" id="recoveryModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <form id="recovery-form">
           <div class="modal-header">
@@ -371,13 +503,15 @@
           <div class="modal-body">
             <div class="mb-4">
               <label class="form-label">Mật khẩu mới</label>
-              <input type="password" name="pass" required class="form-control shadow-none">
+              <input type="password" name="pass" required class="form-control shadow-none" placeholder="Nhập mật khẩu mới">
               <input type="hidden" name="email">
               <input type="hidden" name="token">
             </div>
             <div class="mb-2 text-end">
-              <button type="button" class="btn shadow-none me-2" data-bs-dismiss="modal">Huỷ</button>
-              <button type="submit" class="btn btn-dark shadow-none">Tiếp tục</button>
+              <button type="button" class="btn shadow-none me-2 text-muted" data-bs-dismiss="modal">Huỷ</button>
+              <button type="submit" class="btn text-white shadow-none custom-bg">
+                <i class="bi bi-check-lg me-1"></i> Tiếp tục
+              </button>
             </div>
           </div>
         </form>

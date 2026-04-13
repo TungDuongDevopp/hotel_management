@@ -1,41 +1,68 @@
-<div class="container-fluid bg-white mt-5">
-  <div class="row">
-    <div class="col-lg-4 p-4">
-      <h3 class="h-font fw-bold fs-3 mb-2"><?php echo $settings_r['site_title'] ?></h3>
-      <p>
-        <?php echo $settings_r['site_about'] ?>
-      </p>
-    </div>
-    <div class="col-lg-4 p-4">
-      <h5 class="mb-3">Liên kết</h5>
-      <a href="index.php" class="d-inline-block mb-2 text-dark text-decoration-none">Trang chủ</a> <br>
-      <a href="rooms.php" class="d-inline-block mb-2 text-dark text-decoration-none">Danh sách phòng</a> <br>
-      <a href="facilities.php" class="d-inline-block mb-2 text-dark text-decoration-none">Tiện ích</a> <br>
-      <a href="contact.php" class="d-inline-block mb-2 text-dark text-decoration-none">Liên hệ</a> <br>
-      <a href="about.php" class="d-inline-block mb-2 text-dark text-decoration-none">Về chúng tôi</a>
-    </div>
-    <div class="col-lg-4 p-4">
-        <h5 class="mb-3">Theo dõi chúng tôi</h5>
-        <?php 
-          if($contact_r['tw']!=''){
-            echo<<<data
-              <a href="$contact_r[tw]" class="d-inline-block text-dark text-decoration-none mb-2">
-                <i class="bi bi-twitter me-1"></i> Twitter
-              </a><br>
-            data;
-          }
-        ?>
-        <a href="<?php echo $contact_r['fb'] ?>" class="d-inline-block text-dark text-decoration-none mb-2">
-          <i class="bi bi-facebook me-1"></i> Facebook
-        </a><br>
-        <a href="<?php echo $contact_r['insta'] ?>" class="d-inline-block text-dark text-decoration-none">
-          <i class="bi bi-instagram me-1"></i> Instagram
-        </a><br>
+<footer class="site-footer mt-5">
+  <div class="container-fluid py-5 px-4 px-lg-5">
+    <div class="row">
+      <div class="col-lg-4 mb-4 mb-lg-0">
+        <h3 class="h-font fw-bold fs-3 mb-3"><?php echo $settings_r['site_title'] ?></h3>
+        <p style="line-height:1.8;font-size:.92rem;">
+          <?php echo $settings_r['site_about'] ?>
+        </p>
+        <div class="d-flex gap-2 mt-3">
+          <?php 
+            if($contact_r['tw']!=''){
+              echo<<<data
+                <a href="$contact_r[tw]" class="d-flex align-items-center justify-content-center" style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.08);transition:all .3s;">
+                  <i class="bi bi-twitter"></i>
+                </a>
+              data;
+            }
+          ?>
+          <a href="<?php echo $contact_r['fb'] ?>" class="d-flex align-items-center justify-content-center" style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.08);transition:all .3s;">
+            <i class="bi bi-facebook"></i>
+          </a>
+          <a href="<?php echo $contact_r['insta'] ?>" class="d-flex align-items-center justify-content-center" style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.08);transition:all .3s;">
+            <i class="bi bi-instagram"></i>
+          </a>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+        <h5 class="fw-bold">Liên kết nhanh</h5>
+        <ul class="list-unstyled" style="line-height:2.2;">
+          <li><a href="index.php"><i class="bi bi-chevron-right me-1" style="font-size:.7rem;"></i> Trang chủ</a></li>
+          <li><a href="rooms.php"><i class="bi bi-chevron-right me-1" style="font-size:.7rem;"></i> Danh sách phòng</a></li>
+          <li><a href="facilities.php"><i class="bi bi-chevron-right me-1" style="font-size:.7rem;"></i> Tiện ích</a></li>
+          <li><a href="contact.php"><i class="bi bi-chevron-right me-1" style="font-size:.7rem;"></i> Liên hệ</a></li>
+          <li><a href="about.php"><i class="bi bi-chevron-right me-1" style="font-size:.7rem;"></i> Về chúng tôi</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <h5 class="fw-bold">Liên hệ</h5>
+        <div style="line-height:2.2;font-size:.92rem;">
+          <p class="mb-2">
+            <i class="bi bi-telephone-fill me-2" style="color:var(--gold);"></i>
+            <a href="tel: +<?php echo $contact_r['pn1'] ?>">+<?php echo $contact_r['pn1'] ?></a>
+          </p>
+          <?php if(!empty($contact_r['email'])){ ?>
+          <p class="mb-2">
+            <i class="bi bi-envelope-fill me-2" style="color:var(--gold);"></i>
+            <a href="mailto:<?php echo $contact_r['email'] ?>"><?php echo $contact_r['email'] ?></a>
+          </p>
+          <?php } ?>
+          <?php if(!empty($contact_r['address'])){ ?>
+          <p class="mb-0">
+            <i class="bi bi-geo-alt-fill me-2" style="color:var(--gold);"></i>
+            <span><?php echo $contact_r['address'] ?></span>
+          </p>
+          <?php } ?>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-
-<h6 class="text-center bg-dark text-white p-3 m-0">Hệ thống Quản lý Đặt phòng Khách sạn - VietChill</h6>
+  <div class="footer-copyright">
+    <div class="container">
+      <i class="bi bi-building me-1"></i> Hệ thống Quản lý Đặt phòng Khách sạn — VietChill
+    </div>
+  </div>
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
@@ -44,9 +71,11 @@
   function alert(type,msg,position='body')
   {
     let bs_class = (type == 'success') ? 'alert-success' : 'alert-danger';
+    let icon = (type == 'success') ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill';
     let element = document.createElement('div');
     element.innerHTML = `
-      <div class="alert ${bs_class} alert-dismissible fade show" role="alert">
+      <div class="alert ${bs_class} alert-dismissible fade show d-flex align-items-center" role="alert">
+        <i class="bi ${icon} me-2 fs-5"></i>
         <strong class="me-3">${msg}</strong>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>

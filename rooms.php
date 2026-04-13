@@ -6,6 +6,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <?php require('inc/links.php'); ?>
   <title><?php echo $settings_r['site_title'] ?> - Danh sách phòng</title>
+  <style>
+    .filter-section {
+      border-radius: var(--radius) !important;
+      overflow: hidden;
+    }
+    .filter-section h4 {
+      background: var(--primary-gradient);
+      color: #fff;
+      padding: 14px 18px;
+      margin: -1px -1px 0 -1px;
+      font-size: 1.05rem;
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+    .filter-box {
+      border: 1.5px solid var(--gray-300) !important;
+      border-radius: var(--radius-sm) !important;
+      background: var(--white) !important;
+      transition: var(--transition);
+    }
+    .filter-box:hover {
+      border-color: var(--primary-light) !important;
+    }
+    .filter-box h5 {
+      color: var(--primary-dark);
+    }
+  </style>
 </head>
 <body class="bg-light">
 
@@ -28,27 +54,31 @@
     }
   ?>
 
-  <div class="my-5 px-4">
-    <h2 class="fw-bold h-font text-center">DANH SÁCH PHÒNG</h2>
-    <div class="h-line bg-dark"></div>
+  <div class="page-hero">
+    <div class="container text-center">
+      <h2 class="fw-bold h-font">DANH SÁCH PHÒNG</h2>
+      <div class="gold-divider mt-3"></div>
+    </div>
   </div>
 
   <div class="container-fluid">
     <div class="row">
 
       <div class="col-lg-3 col-md-12 mb-lg-0 mb-4 ps-4">
-        <nav class="navbar navbar-expand-lg navbar-light bg-white rounded shadow">
-          <div class="container-fluid flex-lg-column align-items-stretch">
-            <h4 class="mt-2">Bộ lọc</h4>
-            <button class="navbar-toggler shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#filterDropdown" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white rounded shadow filter-section">
+          <div class="container-fluid flex-lg-column align-items-stretch p-0">
+            <h4 class="mt-0 mb-0 d-flex align-items-center">
+              <i class="bi bi-funnel me-2"></i> Bộ lọc
+            </h4>
+            <button class="navbar-toggler shadow-none border-0 me-2" type="button" data-bs-toggle="collapse" data-bs-target="#filterDropdown" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse flex-column align-items-stretch mt-2" id="filterDropdown">
+            <div class="collapse navbar-collapse flex-column align-items-stretch mt-0 p-3" id="filterDropdown">
               <!-- Check availablity -->
-              <div class="border bg-light p-3 rounded mb-3">
-                <h5 class="d-flex align-items-center justify-content-between mb-3" style="font-size: 18px;">
-                  <span>Kiểm tra phòng trống</span>
-                  <button id="chk_avail_btn" onclick="chk_avail_clear()" class="btn shadow-none btn-sm text-secondary d-none">Làm mới</button>
+              <div class="filter-box p-3 mb-3">
+                <h5 class="d-flex align-items-center justify-content-between mb-3" style="font-size: 16px; font-weight:700;">
+                  <span><i class="bi bi-calendar-check me-1"></i> Kiểm tra phòng trống</span>
+                  <button id="chk_avail_btn" onclick="chk_avail_clear()" class="btn shadow-none btn-sm text-secondary d-none" style="font-size:.8rem;">Làm mới</button>
                 </h5>
                 <label class="form-label">Nhận phòng</label>
                 <input type="date" class="form-control shadow-none mb-3" value="<?php echo $checkin_default ?>" id="checkin" onchange="chk_avail_filter()">
@@ -57,10 +87,10 @@
               </div>
 
               <!-- Facilities -->
-              <div class="border bg-light p-3 rounded mb-3">
-                <h5 class="d-flex align-items-center justify-content-between mb-3" style="font-size: 18px;">
-                  <span>Tiện ích</span>
-                  <button id="facilities_btn" onclick="facilities_clear()" class="btn shadow-none btn-sm text-secondary d-none">Làm mới</button>
+              <div class="filter-box p-3 mb-3">
+                <h5 class="d-flex align-items-center justify-content-between mb-3" style="font-size: 16px; font-weight:700;">
+                  <span><i class="bi bi-grid me-1"></i> Tiện ích</span>
+                  <button id="facilities_btn" onclick="facilities_clear()" class="btn shadow-none btn-sm text-secondary d-none" style="font-size:.8rem;">Làm mới</button>
                 </h5>
                 <?php 
                   $facilities_q = selectAll('facilities');
@@ -69,7 +99,7 @@
                     echo<<<facilities
                       <div class="mb-2">
                         <input type="checkbox" onclick="fetch_rooms()" name="facilities" value="$row[id]" class="form-check-input shadow-none me-1" id="$row[id]">
-                        <label class="form-check-label" for="$row[id]">$row[name]</label>
+                        <label class="form-check-label" for="$row[id]" style="font-size:.9rem;">$row[name]</label>
                       </div>
                     facilities;
                   }
@@ -77,10 +107,10 @@
               </div>
 
               <!-- Guests -->
-              <div class="border bg-light p-3 rounded mb-3">
-                <h5 class="d-flex align-items-center justify-content-between mb-3" style="font-size: 18px;">
-                  <span>Số lượng khách</span>
-                  <button id="guests_btn" onclick="guests_clear()" class="btn shadow-none btn-sm text-secondary d-none">Reset</button>
+              <div class="filter-box p-3 mb-3">
+                <h5 class="d-flex align-items-center justify-content-between mb-3" style="font-size: 16px; font-weight:700;">
+                  <span><i class="bi bi-people me-1"></i> Số lượng khách</span>
+                  <button id="guests_btn" onclick="guests_clear()" class="btn shadow-none btn-sm text-secondary d-none" style="font-size:.8rem;">Reset</button>
                 </h5>
                 <div class="d-flex">
                   <div class="me-3">
@@ -151,8 +181,10 @@
       xhr.open("GET","ajax/rooms.php?fetch_rooms&chk_avail="+chk_avail+"&guests="+guests+"&facility_list="+facility_list,true);
 
       xhr.onprogress = function(){
-        rooms_data.innerHTML = `<div class="spinner-border text-info mb-3 d-block mx-auto" id="loader" role="status">
-          <span class="visually-hidden">Loading...</span>
+        rooms_data.innerHTML = `<div class="d-flex justify-content-center py-5">
+          <div class="spinner-border" style="color:var(--primary);width:3rem;height:3rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
         </div>`;
       }
 
