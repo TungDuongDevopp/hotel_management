@@ -4,11 +4,11 @@
 
 ## 📌 BẢNG PHÂN CÔNG NHIỆM VỤ
 
-| STT | Tên                 | Vai trò | Nhiệm vụ                                   |
-| --- | ------------------- | ------- | ------------------------------------------ |
-| 1   | Đặng Văn Tùng Dương | Leader  | Frontend, quản lý dự án, tổng hợp tài liệu |
-| 2   | Trần Mạnh Cường     | Member  | Backend, xử lý logic hệ thống              |
-| 3   | Nguyễn Thị Ngân     | Member  | Thiết kế cơ sở dữ liệu (Database)          |
+| STT | Tên                 | Vai trò | Nhiệm vụ                                            |
+| --- | ------------------- | ------- | ----------------------------------------------------|
+| 1   | Đặng Văn Tùng Dương | Leader  | Frontend,backedn                                    |
+| 2   | Trần Mạnh Cường     | Member  | Backend, xử lý logic hệ thống                       |
+| 3   | Nguyễn Thị Ngân     | Member  | Thiết kế cơ sở dữ liệu (Database) ,frontend         |
 
 ---
 
