@@ -20,9 +20,9 @@
         alert('error','Ngày trả phòng phải sau ngày nhận phòng!');
       } else {
         // Get room info
-        $room_r = mysqli_fetch_assoc(select("SELECT * FROM `rooms` WHERE `id`=?",$frm_data['room_id'],'i'));
+        $room_r = mysqli_fetch_assoc(select("SELECT * FROM `rooms` WHERE `id`=?",[$frm_data['room_id']],'i'));
         // Get user info
-        $user_r = mysqli_fetch_assoc(select("SELECT * FROM `user_cred` WHERE `id`=?",$frm_data['user_id'],'i'));
+        $user_r = mysqli_fetch_assoc(select("SELECT * FROM `user_cred` WHERE `id`=?",[$frm_data['user_id']],'i'));
         
         if(!$room_r || !$user_r){
           alert('error','Phòng hoặc người dùng không tồn tại!');
@@ -93,11 +93,25 @@
   // Hủy đặt phòng
   if(isset($_GET['cancel_booking'])){
     $frm_data = filteration($_GET);
-    $q = "UPDATE `booking_order` SET `booking_status`='cancelled', `refund`=0 WHERE `booking_id`=?";
-    if(update($q,[$frm_data['cancel_booking']],'i')){
-      alert('success','Đã hủy đơn đặt phòng!');
+    
+    $res = select("SELECT `check_in` FROM `booking_order` WHERE `booking_id`=?", [$frm_data['cancel_booking']], 'i');
+    if($res && mysqli_num_rows($res) > 0) {
+      $booking_data = mysqli_fetch_assoc($res);
+      $checkin_date = date('Y-m-d', strtotime($booking_data['check_in']));
+      $current_date = date('Y-m-d');
+      
+      if($current_date >= $checkin_date) {
+        alert('error','Không thể hủy! Chỉ được phép hủy trước ngày nhận phòng.');
+      } else {
+        $q = "UPDATE `booking_order` SET `booking_status`='cancelled', `refund`=0 WHERE `booking_id`=?";
+        if(update($q,[$frm_data['cancel_booking']],'i')){
+          alert('success','Đã hủy đơn đặt phòng!');
+        } else {
+          alert('error','Hủy thất bại!');
+        }
+      }
     } else {
-      alert('error','Hủy thất bại!');
+      alert('error','Không tìm thấy đơn đặt phòng!');
     }
   }
 
