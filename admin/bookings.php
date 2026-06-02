@@ -115,14 +115,38 @@
     }
   }
 
-  // Xác nhận đã nhận phòng
-  if(isset($_GET['confirm_arrival'])){
+  // Trả phòng (Checkout)
+  if(isset($_GET['checkout_booking'])){
     $frm_data = filteration($_GET);
-    $q = "UPDATE `booking_order` SET `arrival`=1 WHERE `booking_id`=?";
-    if(update($q,[$frm_data['confirm_arrival']],'i')){
-      alert('success','Đã xác nhận nhận phòng!');
+    $q = "UPDATE `booking_order` SET `booking_status`='completed' WHERE `booking_id`=?";
+    if(update($q,[$frm_data['checkout_booking']],'i')){
+      alert('success','Đã khách trả phòng thành công!');
     } else {
       alert('error','Thao tác thất bại!');
+    }
+  }
+
+  // Xác nhận đã nhận phòng & gán số phòng
+  if(isset($_POST['assign_room'])){
+    $frm_data = filteration($_POST);
+    
+    // Kiểm tra số phòng xem có bị trùng lặp thời gian ở với người khác không
+    $q_check = "SELECT bo.booking_id FROM `booking_order` bo 
+                INNER JOIN `booking_details` bd ON bo.booking_id = bd.booking_id
+                WHERE bo.booking_status='booked' AND bo.arrival=1 
+                AND bd.room_no=? AND bo.booking_id != ?";
+    $res = select($q_check, [$frm_data['room_no'], $frm_data['booking_id']], 'si');
+    
+    if(mysqli_num_rows($res) > 0){
+      alert('error', 'Phòng này đang có khách ở, vui lòng chọn số phòng khác!');
+    } else {
+      $q1 = "UPDATE `booking_order` SET `arrival`=1 WHERE `booking_id`=?";
+      $q2 = "UPDATE `booking_details` SET `room_no`=? WHERE `booking_id`=?";
+      
+      update($q1, [$frm_data['booking_id']], 'i');
+      update($q2, [$frm_data['room_no'], $frm_data['booking_id']], 'si');
+      
+      alert('success','Đã xác nhận nhận phòng và gán số phòng!');
     }
   }
 ?>
@@ -159,6 +183,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="?filter=cancelled">Đã hủy</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="?filter=completed">Đã hoàn thành</a>
           </li>
         </ul>
 
@@ -200,6 +227,13 @@
                         WHERE bo.booking_status='cancelled'
                         ORDER BY bo.booking_id DESC";
                       $data = mysqli_query($con, $q);
+                    } else if($filter == 'completed'){
+                      $q = "SELECT bo.*, bd.*, uc.name AS customer_name FROM `booking_order` bo
+                        INNER JOIN `booking_details` bd ON bo.booking_id = bd.booking_id
+                        INNER JOIN `user_cred` uc ON bo.user_id = uc.id
+                        WHERE bo.booking_status='completed'
+                        ORDER BY bo.booking_id DESC";
+                      $data = mysqli_query($con, $q);
                     } else {
                       $q = "SELECT bo.*, bd.*, uc.name AS customer_name FROM `booking_order` bo
                         INNER JOIN `booking_details` bd ON bo.booking_id = bd.booking_id
@@ -230,16 +264,20 @@
                         $status = "<span class='badge bg-success'>Đã đặt</span>";
                       } else if($row['booking_status'] == 'cancelled'){
                         $status = "<span class='badge bg-danger'>Đã hủy</span>";
+                      } else if($row['booking_status'] == 'completed'){
+                        $status = "<span class='badge bg-primary'>Đã hoàn thành</span>";
                       } else {
                         $status = "<span class='badge bg-secondary'>$row[booking_status]</span>";
                       }
 
                       // Arrival badge
-                      if($row['arrival'] == 1){
+                      if($row['arrival'] == 1 && $row['booking_status'] == 'booked'){
+                        $arrival = "<span class='badge bg-success'>Đã nhận</span>";
+                      } else if($row['booking_status'] == 'completed'){
                         $arrival = "<span class='badge bg-success'>Đã nhận</span>";
                       } else {
                         if($row['booking_status'] == 'booked'){
-                          $arrival = "<a href='?confirm_arrival=$row[booking_id]' class='btn btn-sm btn-outline-success' onclick=\"return confirm('Xác nhận khách đã nhận phòng?')\"><i class='bi bi-check-lg'></i> Xác nhận</a>";
+                          $arrival = "<button class='btn btn-sm btn-outline-success' onclick='assignRoom($row[booking_id])' data-bs-toggle='modal' data-bs-target='#assignRoomModal'><i class='bi bi-check-lg'></i> Nhận phòng</button>";
                         } else {
                           $arrival = "<span class='text-muted'>-</span>";
                         }
@@ -248,17 +286,21 @@
                       // Actions
                       $actions = "";
                       if($row['booking_status'] == 'booked'){
-                        // Prepare data for edit modal
-                        $row_json = htmlspecialchars(json_encode([
-                          'booking_id' => $row['booking_id'],
-                          'check_in' => $row['check_in'],
-                          'check_out' => $row['check_out'],
-                          'room_no' => $row['room_no'],
-                          'arrival' => $row['arrival']
-                        ]), ENT_QUOTES, 'UTF-8');
-                        
-                        $actions .= "<button class='btn btn-sm btn-warning rounded-pill mb-1' onclick='editBooking($row_json)' data-bs-toggle='modal' data-bs-target='#editBookingModal'><i class='bi bi-pencil'></i> Sửa</button> ";
-                        $actions .= "<a href='?cancel_booking=$row[booking_id]' class='btn btn-sm btn-danger rounded-pill mb-1' onclick=\"return confirm('Bạn có chắc chắn muốn hủy đơn đặt phòng này?')\"><i class='bi bi-x-circle'></i> Hủy</a>";
+                        if($row['arrival'] == 1) {
+                          $actions .= "<a href='?checkout_booking=$row[booking_id]' class='btn btn-sm btn-info rounded-pill mb-1 text-white' onclick=\"return confirm('Xác nhận khách trả phòng?')\"><i class='bi bi-box-arrow-right'></i> Trả phòng</a> ";
+                        } else {
+                          // Prepare data for edit modal
+                          $row_json = htmlspecialchars(json_encode([
+                            'booking_id' => $row['booking_id'],
+                            'check_in' => $row['check_in'],
+                            'check_out' => $row['check_out'],
+                            'room_no' => $row['room_no'],
+                            'arrival' => $row['arrival']
+                          ]), ENT_QUOTES, 'UTF-8');
+                          
+                          $actions .= "<button class='btn btn-sm btn-warning rounded-pill mb-1' onclick='editBooking($row_json)' data-bs-toggle='modal' data-bs-target='#editBookingModal'><i class='bi bi-pencil'></i> Sửa</button> ";
+                          $actions .= "<a href='?cancel_booking=$row[booking_id]' class='btn btn-sm btn-danger rounded-pill mb-1' onclick=\"return confirm('Bạn có chắc chắn muốn hủy đơn đặt phòng này?')\"><i class='bi bi-x-circle'></i> Hủy</a>";
+                        }
                       }
 
                       echo<<<data
@@ -396,8 +438,37 @@
     </div>
   </div>
 
+  <!-- Modal Nhận phòng & Gán số -->
+  <div class="modal fade" id="assignRoomModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form method="POST">
+          <div class="modal-header">
+            <h5 class="modal-title"><i class="bi bi-door-open"></i> Xác nhận Nhận phòng</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" name="booking_id" id="assign_booking_id">
+            <div class="mb-3">
+              <label class="form-label fw-bold">Vui lòng cấp số phòng cho khách *</label>
+              <input name="room_no" type="text" class="form-control shadow-none" placeholder="VD: P101, P102..." required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+            <button type="submit" name="assign_room" class="btn btn-success">Xác nhận</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <?php require('inc/scripts.php'); ?>
   <script>
+    function assignRoom(id) {
+      document.getElementById('assign_booking_id').value = id;
+    }
+
     function editBooking(jsonStr) {
       let data = JSON.parse(jsonStr);
       document.getElementById('edit_booking_id').value = data.booking_id;
