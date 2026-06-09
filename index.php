@@ -98,6 +98,72 @@
       background: var(--gold-gradient);
       border-radius: 99px;
     }
+    .card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .card-body {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .card-body > div:not(:last-child) {
+      flex-grow: 1;
+    }
+    .swiper-slide {
+      display: flex;
+      align-items: stretch;
+    }
+    .swiper-slide.bg-white {
+      border-left: 4px solid var(--primary);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 280px;
+      transition: var(--transition);
+    }
+    .swiper-slide.bg-white:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(27,107,58,.15) !important;
+    }
+    .swiper-slide .profile {
+      gap: 12px;
+    }
+    .swiper-slide .profile img {
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .swiper-slide .profile h6 {
+      color: var(--primary);
+      margin-bottom: 2px !important;
+      font-size: 0.95rem;
+    }
+    .swiper-slide .profile small {
+      font-size: 0.8rem;
+      display: block;
+    }
+    .swiper-slide .testimonial-quote p {
+      color: #666;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 0 !important;
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+    .swiper-slide .rating {
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px solid #e0e0e0;
+    }
+    .swiper-testimonials {
+      padding: 40px 0;
+    }
+    .swiper-testimonials .swiper-slide {
+      width: auto;
+      max-width: 350px;
+    }
   </style>
 </head>
 <body class="bg-light">
@@ -569,18 +635,13 @@
     });
 
     var swiper = new Swiper(".swiper-testimonials", {
-      effect: "coverflow",
       grabCursor: true,
-      centeredSlides: true,
-      slidesPerView: "auto",
-      slidesPerView: "3",
+      spaceBetween: 20,
+      slidesPerView: 3,
       loop: true,
-      coverflowEffect: {
-        rotate: 50,
-        stretch: 0,
-        depth: 100,
-        modifier: 1,
-        slideShadows: false,
+      autoplay: {
+        delay: 4000,
+        disableOnInteraction: false,
       },
       pagination: {
         el: ".swiper-pagination",
